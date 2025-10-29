@@ -1,0 +1,19 @@
+FROM node:18-alpine
+
+
+WORKDIR /app
+
+# for better caching
+# docker to cache the npm install step if package files haven't changed
+COPY package.json package-lock.json* ./
+
+# 'npm ci' for clean installs from package-lock.json
+RUN npm ci
+
+# all
+COPY . .
+
+EXPOSE 5173
+
+# accessible from outside the container
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
